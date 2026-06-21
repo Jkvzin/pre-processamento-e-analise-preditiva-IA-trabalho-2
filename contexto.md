@@ -29,11 +29,17 @@ trabalho2IA/
 ├── main.py                             ← Pipeline completo (~1.200 linhas)
 ├── documentacao_final.md               ← Documentação detalhada com justificativas
 ├── README.md                           ← Visão geral do projeto
-├── contexto.md                         ← Este arquivo
+├── contexto.md                         ← Este arquivo (resumo executivo)
+├── trabalho.md                         ← Enunciado original do professor
+├── roteiro_apresentacao.md             ← Roteiro completo pra apresentar
+├── explicacao_graficos.md              ← Guia visual explicando cada gráfico
+├── apresentacao.pptx                   ← Slides de 3 minutos (3 slides)
 ├── 01_analise_exploratoria.ipynb       ← Notebook 1: Etapas 1 a 5
 ├── 02_preprocessamento.ipynb           ← Notebook 2: Etapas 6 a 10
 └── 03_modelagem_preditiva.ipynb        ← Notebook 3: Etapas 2.1 a 2.7
 ```
+
+**Nota:** Arquivos auxiliares (`import_data.py`, `notebook.ipynb` antigo, `gen_slides.js`, `node_modules/`) foram removidos na limpeza final — o projeto contém apenas o necessário pra entrega.
 
 ---
 

@@ -40,6 +40,8 @@ A única exceção é o **matplotlib**, que só uso pra plotar os gráficos — 
 ├── main.py                           ← Pipeline completo (roda tudo de uma vez)
 ├── documentacao_final.md             ← Documentação detalhada com justificativas
 ├── contexto.md                       ← Resumo executivo
+├── roteiro_apresentacao.md           ← Roteiro completo pra apresentar
+├── explicacao_graficos.md            ← Guia visual explicando cada gráfico
 ├── trabalho.md                       ← Enunciado original do trabalho
 ├── 01_analise_exploratoria.ipynb     ← Notebook 1: Etapas 1 a 5
 ├── 02_preprocessamento.ipynb         ← Notebook 2: Etapas 6 a 10
