@@ -489,12 +489,12 @@ def etapa7_amostragem_desbalanceamento(y_train_clean):
 # ETAPA 8: LIMPEZA DE DADOS
 # ======================================================================
 
-def etapa8_limpeza_dados(header_train, X_train, y_train, mask, header_original, X_original, y_original):
+def etapa8_limpeza_dados(header_train, X_train):
     print_header('ETAPA 8: Limpeza de Dados')
 
-    from utils import impute_mode, detect_outliers_iqr, calc_quartiles, calc_iqr
+    from utils import detect_outliers_iqr
 
-    feature_names = list(header_train) if header_train else list(header_original[:-1])
+    feature_names = list(header_train)
 
     # 8a. Outliers
     print_subheader('8a. Identificação de Outliers (Método IQR)')
@@ -776,8 +776,7 @@ def main():
 
     # Etapa 8: Limpeza de dados (outliers, inconsistentes, redundantes, ausentes)
     X_train_imputed = etapa8_limpeza_dados(
-        feature_names, X_train_clean, y_train_clean,
-        mask, header, X, y
+        feature_names, X_train_clean
     )
 
     # Também precisamos imputar o conjunto de teste com os mesmos critérios

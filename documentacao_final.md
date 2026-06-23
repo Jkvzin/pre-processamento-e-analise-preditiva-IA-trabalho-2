@@ -4,6 +4,13 @@
 **Base:** Breast Cancer Wisconsin (Original) — UCI ML Repository (id=15)  
 **Abordagem:** Tudo implementado do zero com Python puro + módulo math  
 
+**Estrutura do Projeto:** 
+O projeto foi organizado em três Jupyter Notebooks sequenciais para demonstrar o fluxo de processamento e experimentação:
+- `01_analise_exploratoria.ipynb`: Focado na estatística descritiva e visualização da distribuição de classes.
+- `02_preprocessamento.ipynb`: Dedicado à limpeza da base (duplicatas, dados ausentes), normalização e correlação.
+- `03_modelagem_preditiva.ipynb`: Treinamento, validação e comparação de desempenho entre K-NN, Árvore C4.5 e MLP.
+Toda a base matemática "from scratch" está isolada e documentada no arquivo `utils.py`.
+
 ---
 
 ## Parte 1: Pré-processamento e Análise de Dados
@@ -363,11 +370,11 @@ A MLP convergiu bem — o loss caiu de ~0.10 pra ~0.03. Mas ficou ligeiramente a
 | Modelo | Acurácia | Precisão | Recall | F1-Score | Δ Baseline |
 |--------|----------|----------|--------|----------|------------|
 | Baseline (Major) | 0.3504 | 0.3504 | 1.0000 | 0.5189 | — |
-| **K-NN (K=3)** 🏆 | **0.9781** | **1.0000** | **0.9375** | **0.9677** | **+0.4488** |
+| **K-NN (K=3)** | **0.9781** | **1.0000** | **0.9375** | **0.9677** | **+0.4488** |
 | C4.5 (d=3) | 0.9708 | 0.9783 | 0.9375 | 0.9574 | +0.4385 |
 | MLP (8 ocultos) | 0.9635 | 0.9778 | 0.9167 | 0.9462 | +0.4273 |
 
-**🏆 K-NN com K=3 foi o melhor modelo.**
+**K-NN com K=3 foi o melhor modelo.**
 
 Algumas coisas que eu destaco dessa comparação:
 
