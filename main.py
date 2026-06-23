@@ -9,7 +9,6 @@ puras do módulo utils.py.
 import os
 import sys
 import math
-from collections import Counter
 
 # Garante que o diretório atual está no path para importar utils
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -150,29 +149,29 @@ def etapa3_escala_dados(header, X):
         col = extract_column(X, i)
         unique_vals = set(col)
 
-        # Todos são escala racional (razão): possuem zero verdadeiro (ausência)
-        # e operações de razão fazem sentido.
+        # Escala intervalar: intervalos constantes entre valores consecutivos
+        # não há zero absoluto verdadeiro (nota 1 = mínimo da escala, não ausência)
         if len(unique_vals) <= 12 and all(v == int(v) for v in col if v is not None):
-            escala = 'Racional Discreta'
+            escala = 'Intervalar Discreta'
         else:
-            escala = 'Racional Contínua'
+            escala = 'Intervalar Contínua'
 
         just = (
-            'Possui zero absoluto (nota 1 = presença mínima), '
-            'intervalos constantes e proporções com significado '
-            '(ex: nota 8 é o dobro de 4 na escala visual)'
+            'Intervalos aproximadamente constantes entre notas '
+            'consecutivas (diferença 3→5 ≈ diferença 7→9 na '
+            'percepção do patologista)'
         )
 
         print(f'  {name:<32} {escala:<18} {just}')
 
     print()
-    print('  Todas as features são do tipo ESCALA RACIONAL porque:')
-    print('    1. Possuem um zero absoluto (ausência da característica = nota 1)')
-    print('    2. Intervalos são constantes (diferença entre 3 e 5 = diferença entre 7 e 9)')
-    print('    3. Razões têm significado (nota 10 = 2x nota 5 na percepção do patologista)')
-    print()
-    print('  A escala original é ordinal (1-10), mas na prática da literatura médica')
-    print('  trata-se como intervalar/racional para permitir operações estatísticas.')
+    print('  Todas as features são do tipo ESCALA INTERVALAR porque:')
+    print('    1. Os intervalos entre notas consecutivas são aproximadamente constantes')
+    print('    2. A escala original é ordinal (1-10), mas na literatura médica')
+    print('    trata-se como intervalar para permitir operações estatísticas')
+    print('    paramétricas (média, desvio padrão, correlação).')
+    print('    3. Não há zero absoluto verdadeiro — nota 1 não significa ausência')
+    print('    total da característica, mas sim o mínimo observável na escala.')
 
 
 # ======================================================================
@@ -319,9 +318,15 @@ def etapa4c_distribuicao(header, X, y, mask):
 
     # ----- 4c.4: Resumo textual da distribuição -----
     print_subheader('Resumo da Distribuição')
-    print(f'\n  Total de exemplos (válidos): {sum(1 for m in mask if m)}')
-    print(f'  Benignos (0): {values[0]} ({format_percent(values[0], total)})')
-    print(f'  Malignos  (1): {values[1]} ({format_percent(values[1], total)})')
+    n_valid_total = sum(1 for m in mask if m)
+    # Recalcula counts apenas sobre exemplos VÁLIDOS (mask=True)
+    y_valid_full = [y[i] for i in range(len(y)) if mask[i]]
+    counts_valid = count_target(y_valid_full)
+    total_valid_count = sum(counts_valid.values())
+    values = [counts_valid.get(0, 0), counts_valid.get(1, 0)]
+    print(f'\n  Total de exemplos (válidos): {n_valid_total}')
+    print(f'  Benignos (0): {values[0]} ({format_percent(values[0], total_valid_count)})')
+    print(f'  Malignos  (1): {values[1]} ({format_percent(values[1], total_valid_count)})')
     print(f'  Razão benigno/maligno: {values[0]}/{values[1]} ≈ {values[0]/values[1]:.2f}:1')
 
     imbalance_ratio = max(values) / min(values) if min(values) > 0 else float('inf')

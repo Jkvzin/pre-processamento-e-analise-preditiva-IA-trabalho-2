@@ -8,7 +8,24 @@ NENHUMA biblioteca externa (pandas, numpy, scipy) é usada para cálculos.
 
 import csv
 import math
-from collections import Counter
+
+
+# ---------------------------------------------------------------------------
+# 0. CONTADOR DE FREQUÊNCIA MANUAL (substitui collections.Counter)
+# ---------------------------------------------------------------------------
+
+def _count_frequencies(items):
+    """
+    Conta a frequência de cada item em uma lista.
+    Substitui collections.Counter com implementação manual (dict).
+    """
+    freq = {}
+    for item in items:
+        if item in freq:
+            freq[item] += 1
+        else:
+            freq[item] = 1
+    return freq
 
 
 # ---------------------------------------------------------------------------
@@ -98,7 +115,7 @@ def calc_mode(data):
     """Moda: valor(es) mais frequente(s)"""
     if len(data) == 0:
         return []
-    freq = Counter(data)
+    freq = _count_frequencies(data)
     max_count = max(freq.values())
     modes = [k for k, v in freq.items() if v == max_count]
     return modes
@@ -234,7 +251,7 @@ def extract_column(X, col_idx, mask=None):
 
 def count_target(y):
     """Conta ocorrências de cada classe em y."""
-    counts = Counter(y)
+    counts = _count_frequencies(y)
     return dict(counts)
 
 
@@ -689,7 +706,7 @@ def majority_class_baseline(y_train):
 
     Retorna: (predict_fn, majority_class, majority_ratio)
     """
-    counts = Counter(y_train)
+    counts = _count_frequencies(y_train)
     majority = max(counts, key=counts.get)
     ratio = counts[majority] / len(y_train)
     return (lambda x: majority), majority, ratio
@@ -777,7 +794,7 @@ def calc_entropy(labels):
     if n == 0:
         return 0.0
 
-    counts = Counter(labels)
+    counts = _count_frequencies(labels)
     entropy = 0.0
     for count in counts.values():
         p = count / n
@@ -795,7 +812,7 @@ def calc_split_info(values):
     n = len(values)
     if n == 0:
         return 0.0
-    counts = Counter(values)
+    counts = _count_frequencies(values)
     split_info = 0.0
     for count in counts.values():
         p = count / n
@@ -904,9 +921,10 @@ def build_tree_c45(X, y, feature_names, max_depth=10, min_samples=2, depth=0):
     # Critérios de parada: nó folha
     unique_classes = set(y)
     if len(unique_classes) == 1:
-        return {'type': 'leaf', 'prediction': y[0]}
+        majority = max(_count_frequencies(y).items(), key=lambda kv: kv[1])[0]
+        return {'type': 'leaf', 'prediction': majority}
     if n_samples < min_samples or depth >= max_depth:
-        majority = Counter(y).most_common(1)[0][0]
+        majority = max(_count_frequencies(y).items(), key=lambda kv: kv[1])[0]
         return {'type': 'leaf', 'prediction': majority}
 
     # Encontra o melhor split
@@ -914,7 +932,7 @@ def build_tree_c45(X, y, feature_names, max_depth=10, min_samples=2, depth=0):
 
     # Se nenhum split melhora, vira folha
     if feat_idx is None or gain_ratio <= 0:
-        majority = Counter(y).most_common(1)[0][0]
+        majority = max(_count_frequencies(y).items(), key=lambda kv: kv[1])[0]
         return {'type': 'leaf', 'prediction': majority}
 
     # Divide os dados
@@ -1057,13 +1075,11 @@ def mlp_train(X, y, hidden_neurons=8, learning_rate=0.1, epochs=200, seed=None, 
         for i in range(n_samples):
             # ── FORWARD PASS ──
             # Camada oculta
-            hidden_in = [0.0] * n_hidden
             hidden_out = [0.0] * n_hidden
             for h in range(n_hidden):
                 z = b1[h]
                 for f in range(n_features):
                     z += X[i][f] * w1[f][h]
-                hidden_in[h] = z
                 hidden_out[h] = sigmoid(z)
 
             # Camada de saída

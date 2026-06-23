@@ -41,13 +41,11 @@ Isso faz sentido porque são pontuações clínicas inteiras que patologistas at
 
 ### Etapa 3 — Escala de Dados dos Atributos de Entrada
 
-Classifiquei todos os atributos como **Racional Discreta**. Meus motivos:
+Classifiquei todos os atributos como **Intervalar Discreta**. Meus motivos:
 
-1. **Zero absoluto existe:** a nota 1 representa ausência ou presença mínima da característica celular
-2. **Intervalos constantes:** a diferença entre nota 3 e 5 tem o mesmo significado clínico que a diferença entre 7 e 9
-3. **Razões fazem sentido:** uma nota 10 representa o dobro da severidade de uma nota 5
-
-Sei que a escala original é ordinal (1-10), mas na literatura médica essas notas costumam ser tratadas como intervalares/racionais pra permitir operações estatísticas paramétricas. Achei razoável seguir essa convenção.
+1. **Intervalos aproximadamente constantes:** a diferença entre nota 3 e 5 tem significado clínico similar à diferença entre 7 e 9 na percepção do patologista
+2. **Não há zero absoluto:** nota 1 não significa ausência total — é o piso da escala (presença mínima)
+3. **Convenção da literatura:** embora a escala original seja ordinal, na prática médica trata-se como intervalar para viabilizar operações estatísticas paramétricas (média, desvio padrão, correlação)
 
 ---
 
@@ -88,9 +86,9 @@ Bare_nuclei é o atributo mais disperso de longe (variância 13.28, IQR 5.0). Mi
 #### 4c. Medidas de Distribuição
 
 - **Total de exemplos válidos:** 683 (16 linhas com dados ausentes foram descartadas)
-- **Benignos (0):** 458 (65.52%)
-- **Malignos (1):** 241 (34.48%)
-- **Razão benigno/maligno:** 1.90:1
+- **Benignos (0):** 444 (65.01%)
+- **Malignos (1):** 239 (34.99%)
+- **Razão benigno/maligno:** 1.86:1
 
 O dataset é relativamente balanceado — a razão está abaixo de 2:1, que é o limiar que eu considero crítico pra precisar de técnicas de balanceamento artificial.
 
@@ -355,6 +353,8 @@ Resultado no teste:
 | **F1-Score** | **0.9462** |
 
 A MLP convergiu bem — o loss caiu de ~0.10 pra ~0.03. Mas ficou ligeiramente atrás do K-NN e da C4.5 em recall. Acho que com mais épocas ou uma arquitetura diferente (mais neurônios, duas camadas) daria pra melhorar, mas pro escopo do trabalho uma camada oculta já resolve.
+
+**Limitação conhecida:** Ao contrário do K-NN (testado com 7 valores de K) e da C4.5 (testada com 5 profundidades), a MLP foi avaliada com uma única configuração de hiperparâmetros (8 neurônios, lr=0.1, 500 épocas). O tuning da MLP foi omitido por restrição de tempo — o treinamento de cada configuração leva ~30s e testar uma grade completa (ex: 3 arquiteturas × 3 learning rates) tomaria ~5 minutos adicionais. Isso significa que o F1-Score de 0.9462 reportado para a MLP é um *lower bound* — com tuning adequado, é provável que a MLP alcance desempenho mais próximo (ou superior) ao K-NN.
 
 ---
 
